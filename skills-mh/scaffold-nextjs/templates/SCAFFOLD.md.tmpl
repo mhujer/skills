@@ -1,0 +1,32 @@
+# Scaffold in progress
+
+Phase 1 is done. This file is what routes phase 2, and phase 2 deletes it when the scaffold is
+finished — so while it exists, the project is half-built.
+
+## Derived values
+
+- Project name: `{{PROJECT_NAME}}`
+- Timezone: `Europe/Prague`
+- Ports: 3000 (app), 9001 (supervisor)
+
+## Next steps for the human
+
+From the host, in this directory:
+
+```bash
+docker compose up -d --build
+docker compose exec app claude
+```
+
+Then inside that session: `/scaffold-nextjs`
+
+## For the agent
+
+You are in **phase 2**. Read `PHASE-2.md` in the skill directory and follow it.
+
+Phase 1 wrote every file **blind** — no `node_modules` existed, so nothing was ever run. Expect
+things to be broken and fix them; a tree that looks plausible has not been checked.
+
+## Status
+
+Phase 2 has not started.

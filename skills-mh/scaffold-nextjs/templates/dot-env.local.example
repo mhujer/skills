@@ -1,0 +1,8 @@
+# Copied to both .env.local (what docker compose reads) and .env.local.example (committed).
+# Replace the placeholders in .env.local; leave this file's placeholders alone.
+
+# Pooled connection — what the app uses at runtime.
+DATABASE_URL=postgres://user:password@host/dbname?sslmode=require
+
+# Direct connection — what drizzle-kit and psql use. Neon calls this the unpooled URL.
+DATABASE_URL_UNPOOLED=postgres://user:password@host/dbname?sslmode=require

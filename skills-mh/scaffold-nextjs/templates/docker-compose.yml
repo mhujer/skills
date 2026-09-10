@@ -1,0 +1,29 @@
+services:
+  app:
+    build: .
+    container_name: '{{PROJECT_NAME}}-app'
+    # UID/GID come from the .env file next to this one, so the container writes
+    # files the host user owns. Shell exports of the same names take precedence.
+    user: '${UID}:${GID}'
+    ports:
+      - '127.0.0.1:3000:3000'
+      - '127.0.0.1:9001:9001'
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    environment:
+      # .claude.json lives inside the config directory, so one mount carries everything
+      CLAUDE_CONFIG_DIR: /home/node/.claude
+    volumes:
+      - '.:/{{PROJECT_NAME}}'
+      - ${HOME}/.claude:/home/node/.claude
+      - ${HOME}/.gitconfig:/home/node/.gitconfig:ro
+      - ${HOME}/.npm:/home/node/.npm
+      # Read-only over the parts the agent executes or is instructed by
+      - ${HOME}/.claude/settings.json:/home/node/.claude/settings.json:ro
+      - ${HOME}/.claude/CLAUDE.md:/home/node/.claude/CLAUDE.md:ro
+      - ${HOME}/.claude/skills:/home/node/.claude/skills:ro
+      - ${HOME}/.claude/hooks:/home/node/.claude/hooks:ro
+      - ${HOME}/.claude/plugins:/home/node/.claude/plugins:ro
+      - ${HOME}/.claude/claude-code-status-line.py:/home/node/.claude/claude-code-status-line.py:ro
+    env_file:
+      - .env.local

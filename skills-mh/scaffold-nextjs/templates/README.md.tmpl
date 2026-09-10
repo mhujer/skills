@@ -1,0 +1,57 @@
+# {{PROJECT_NAME}}
+
+Next.js application. Claude Code runs **inside** the app container, so it has no docker CLI —
+everything on this page is yours to run from the host. The commands Claude uses from inside are
+in [`CLAUDE.md`](CLAUDE.md).
+
+## First run
+
+```bash
+docker compose up -d --build
+```
+
+The container installs dependencies on boot and then starts the dev server under supervisord.
+The app is at [http://localhost:3000](http://localhost:3000).
+
+`.env` carries your `UID`/`GID` so container-written files stay owned by you. `.env.local` holds
+the database credentials — start from `.env.local.example`.
+
+## Working in the container
+
+```bash
+docker compose exec app claude   # Claude Code
+docker compose exec app bash     # a shell
+docker compose down              # stop
+```
+
+## Packages
+
+Install inside the container, never on the host — `.npmrc` sets `ignore-scripts=true` there, so a
+malicious postinstall script cannot reach your machine. `node_modules/` is shared through the
+volume mount, so the host sees the result either way.
+
+```bash
+docker compose exec app npm install <package>
+```
+
+## Dev server
+
+It runs under supervisord so it can be restarted without restarting the container — restarting the
+container would kill any Claude Code session inside it.
+
+```bash
+docker compose exec app supervisorctl -c supervisord.conf restart next-dev
+docker compose exec app supervisorctl -c supervisord.conf status
+docker compose logs -f app
+```
+
+The supervisor RPC interface is published on `127.0.0.1:9001`.
+
+## Handy aliases
+
+```bash
+alias dcup='docker compose up -d'
+alias dcdown='docker compose down'
+alias dcclaude='docker compose exec app claude'
+alias dcsh='docker compose exec app bash'
+```

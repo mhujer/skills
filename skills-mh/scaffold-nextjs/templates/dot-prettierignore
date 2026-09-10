@@ -1,0 +1,12 @@
+node_modules
+.next
+out
+build
+dist
+drizzle/meta
+.git
+.gitignore
+.prettierignore
+package.json
+package-lock.json
+tsconfig.json

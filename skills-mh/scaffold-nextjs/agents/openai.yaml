@@ -1,0 +1,5 @@
+interface:
+  display_name: "Scaffold Next.js"
+  short_description: "Scaffold a Next.js project that runs in its own container"
+policy:
+  allow_implicit_invocation: false

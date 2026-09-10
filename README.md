@@ -1,3 +1,15 @@
+This a fork of great [Matt's skills](https://skills.sh/mattpocock/skills).
+
+I have my adjustments and custom skills in `mh` branch and regularly rebase it on `main`. ([see what I changed](https://github.com/mhujer/skills/compare/main...mh))
+
+Run [`install-skills-mh.sh`](./install-skills-mh.sh) to install my selected skills into `~/.claude/skills` and `~/.codex/skills`. It installs the upstream skills listed in the script's `UPSTREAM_SKILLS` array plus everything in `skills-mh/`.
+
+Skill are copied so the script needs to be re-run after a `git pull` or after editing a skill.
+
+
+---
+
+
 <p>
   <a href="https://www.aihero.dev/s/skills-newsletter">
     <picture>

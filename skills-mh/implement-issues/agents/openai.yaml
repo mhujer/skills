@@ -1,0 +1,5 @@
+interface:
+  display_name: "Implement Issues"
+  short_description: "Implement every ready issue in a feature directory"
+policy:
+  allow_implicit_invocation: false

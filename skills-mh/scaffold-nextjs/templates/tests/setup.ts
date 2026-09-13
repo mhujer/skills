@@ -16,8 +16,16 @@ vi.mock('@/db', async () => {
 
 // Spies rather than no-ops, so a test can assert which paths get revalidated.
 vi.mock('next/cache', () => ({
+  refresh: vi.fn(),
   revalidatePath: vi.fn(),
   revalidateTag: vi.fn(),
+}));
+
+// The real `redirect` throws a control-flow exception the framework catches. A spy instead, so a
+// test can assert where an action sent the user without having to catch anything.
+vi.mock('next/navigation', () => ({
+  redirect: vi.fn(),
+  notFound: vi.fn(),
 }));
 
 // Nothing to empty — and nothing to boot — when the test file never reached the database.

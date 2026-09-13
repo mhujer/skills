@@ -1,7 +1,7 @@
 # scaffold-nextjs — how to start it
 
 This skill runs in two phases and cannot launch the first one itself: phase 1 needs a container
-that already has node and your `~/.claude`, and that is the one thing the scaffold cannot scaffold.
+that already has node, your `~/.claude` and your `~/.codex`, and that is the one thing the scaffold cannot scaffold.
 
 From an **empty directory** on the host:
 
@@ -12,6 +12,7 @@ docker run --rm -it \
   -e CLAUDE_CONFIG_DIR=/home/node/.claude \
   -v "$PWD:$PWD" -w "$PWD" \
   -v "$HOME/.claude:/home/node/.claude" \
+  -v "$HOME/.codex:/home/node/.codex" \
   -v "$HOME/.gitconfig:/home/node/.gitconfig:ro" \
   -v "$HOME/.npm:/home/node/.npm" \
   node:24 bash -c 'curl -fsSL https://claude.ai/install.sh | bash && exec /home/node/.local/bin/claude'

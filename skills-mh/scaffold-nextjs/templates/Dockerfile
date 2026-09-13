@@ -1,8 +1,10 @@
 FROM node:24
 
-# Install git, curl, and python3 for Claude Code (python3 needed for custom statusline)
+# Install the headless browser and tools used by coding agents (python3 for Claude's custom statusline)
 # supervisor runs the dev server so it can be restarted without restarting the container
-RUN apt-get update && apt-get install -y git curl python3 sudo supervisor && rm -rf /var/lib/apt/lists/*
+RUN apt-get update \
+    && apt-get install -y chromium curl git python3 sudo supervisor \
+    && rm -rf /var/lib/apt/lists/*
 
 # Install GitHub CLI from the official apt repository (https://github.com/cli/cli/blob/trunk/docs/install_linux.md)
 RUN mkdir -p -m 755 /etc/apt/keyrings \
@@ -37,12 +39,18 @@ WORKDIR ${APP_DIR}
 # Fix dubious ownership error from git
 RUN git config --system --add safe.directory ${APP_DIR}
 
-# Install TypeScript LSP for Claude to use
+# Install TypeScript LSP for coding agents to use
 RUN npm install -g typescript-language-server typescript
 
-# Claude installs this project's missing dependencies itself
+# Coding agents install this project's missing dependencies themselves
 RUN echo 'node ALL=(ALL) NOPASSWD:ALL' >/etc/sudoers.d/node \
     && chmod 0440 /etc/sudoers.d/node
+
+# Keep the Codex executable outside CODEX_HOME so mounting the user's runtime
+# configuration at /home/node/.codex cannot hide the installed package.
+RUN mkdir -p /opt/codex \
+    && curl -fsSL https://chatgpt.com/codex/install.sh \
+    | CODEX_HOME=/opt/codex CODEX_INSTALL_DIR=/usr/local/bin CODEX_NON_INTERACTIVE=1 sh
 
 # Switch to non-root user for remaining operations
 USER node
@@ -50,10 +58,10 @@ USER node
 # Install Claude Code using native method (recommended)
 RUN curl -fsSL https://claude.ai/install.sh | bash
 
-# Add Claude Code to PATH
+# Add Claude Code to PATH (Codex lives in /usr/local/bin)
 ENV PATH="/home/node/.local/bin:${PATH}"
 
-# Add Claude Code to shell config for interactive sessions
+# Add coding agents to PATH for interactive sessions
 RUN echo 'export PATH="$HOME/.local/bin:$PATH"' >> /home/node/.bashrc
 
 # Fix Claude Code colors (https://ranang.medium.com/fixing-claude-codes-flat-or-washed-out-remote-colors-82f8143351ed)

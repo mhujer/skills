@@ -16,14 +16,25 @@ services:
     volumes:
       - '.:/{{PROJECT_NAME}}'
       - ${HOME}/.claude:/home/node/.claude
+      - ${HOME}/.codex:/home/node/.codex
       - ${HOME}/.gitconfig:/home/node/.gitconfig:ro
       - ${HOME}/.npm:/home/node/.npm
-      # Read-only over the parts the agent executes or is instructed by
+      # Read-only over the parts the agent executes or is instructed by.
+      # Session state (projects/, history.jsonl, sessions/, credentials) stays
+      # writable. Only list paths that exist on the host: a bind mount with a
+      # missing source makes Docker create it, so a typo here would plant a
+      # root-owned directory named e.g. AGENTS.md in the config directory.
       - ${HOME}/.claude/settings.json:/home/node/.claude/settings.json:ro
       - ${HOME}/.claude/CLAUDE.md:/home/node/.claude/CLAUDE.md:ro
       - ${HOME}/.claude/skills:/home/node/.claude/skills:ro
       - ${HOME}/.claude/hooks:/home/node/.claude/hooks:ro
       - ${HOME}/.claude/plugins:/home/node/.claude/plugins:ro
       - ${HOME}/.claude/claude-code-status-line.py:/home/node/.claude/claude-code-status-line.py:ro
+      # Codex's equivalent. config.toml is executable surface, not just
+      # settings: it declares command hooks, MCP servers and notify. skills/
+      # hold SKILL.md plus executable scripts/. Add AGENTS.md,
+      # AGENTS.override.md and prompts/ here if they ever exist on the host.
+      - ${HOME}/.codex/config.toml:/home/node/.codex/config.toml:ro
+      - ${HOME}/.codex/skills:/home/node/.codex/skills:ro
     env_file:
       - .env.local

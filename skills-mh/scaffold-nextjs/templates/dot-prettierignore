@@ -10,3 +10,5 @@ drizzle/meta
 package.json
 package-lock.json
 tsconfig.json
+.next-agent
+browser-output

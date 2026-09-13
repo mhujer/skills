@@ -39,8 +39,8 @@ Stop, with a message naming what is wrong, unless both hold:
 
 - The working directory is empty (ignoring `.` entries).
 - All of these exist: `~/.claude/settings.json`, `~/.claude/CLAUDE.md`, `~/.claude/skills`,
-  `~/.claude/hooks`, `~/.claude/plugins`, `~/.claude/claude-code-status-line.py`, `~/.gitconfig`,
-  `~/.npm`.
+  `~/.claude/hooks`, `~/.claude/plugins`, `~/.claude/claude-code-status-line.py`,
+  `~/.codex/config.toml`, `~/.codex/skills`, `~/.gitconfig`, `~/.npm`.
 
 The second guard matters because `docker-compose.yml` bind-mounts every one of those paths. A
 missing one makes docker silently create a root-owned directory in its place, and that surfaces at
@@ -80,7 +80,8 @@ Leave `templates/SCAFFOLD.md.tmpl` for step 5; it is not part of this copy.
 ### 4. Apply the config intents
 
 `create-next-app` owns `package.json`, `tsconfig.json`, `eslint.config.mjs`, `.gitignore`,
-`CLAUDE.md` and `README.md`, so those are patched rather than replaced. Follow
+`AGENTS.md`, `README.md`, `src/app/layout.tsx` and `next.config.ts`, so those are patched rather
+than replaced. Follow
 [`CONFIG-INTENTS.md`](CONFIG-INTENTS.md) and check every end state it names.
 
 ### 5. Hand off

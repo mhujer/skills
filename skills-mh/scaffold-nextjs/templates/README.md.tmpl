@@ -1,8 +1,8 @@
 # {{PROJECT_NAME}}
 
-Next.js application. Claude Code runs **inside** the app container, so it has no docker CLI —
-everything on this page is yours to run from the host. The commands Claude uses from inside are
-in [`CLAUDE.md`](CLAUDE.md).
+Next.js application. Coding agents (Claude Code, Codex) run **inside** the app container, so they
+have no docker CLI — everything on this page is yours to run from the host. The commands the agents
+use from inside are in [`AGENTS.md`](AGENTS.md).
 
 ## First run
 
@@ -20,6 +20,7 @@ the database credentials — start from `.env.local.example`.
 
 ```bash
 docker compose exec app claude   # Claude Code
+docker compose exec app codex    # Codex
 docker compose exec app bash     # a shell
 docker compose down              # stop
 ```
@@ -37,7 +38,7 @@ docker compose exec app npm install <package>
 ## Dev server
 
 It runs under supervisord so it can be restarted without restarting the container — restarting the
-container would kill any Claude Code session inside it.
+container would kill any agent session inside it.
 
 ```bash
 docker compose exec app supervisorctl -c supervisord.conf restart next-dev
@@ -45,7 +46,15 @@ docker compose exec app supervisorctl -c supervisord.conf status
 docker compose logs -f app
 ```
 
-The supervisor RPC interface is published on `127.0.0.1:9001`.
+The supervisor web UI and RPC interface are published on `127.0.0.1:9001`.
+
+## Agent server
+
+A second dev server, `agent-dev`, runs on port 3001 inside the container against
+`AGENT_DATABASE_URL`, so an agent can drive the app in a headless browser without touching the
+live database. It is off until started, and it refuses to start until
+`scripts/prepare-agent-database.ts` is implemented — seeding that database is this project's to
+design.
 
 ## Handy aliases
 
@@ -53,5 +62,6 @@ The supervisor RPC interface is published on `127.0.0.1:9001`.
 alias dcup='docker compose up -d'
 alias dcdown='docker compose down'
 alias dcclaude='docker compose exec app claude'
+alias dccodex='docker compose exec app codex'
 alias dcsh='docker compose exec app bash'
 ```

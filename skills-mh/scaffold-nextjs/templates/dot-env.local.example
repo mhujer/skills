@@ -6,3 +6,7 @@ DATABASE_URL=postgres://user:password@host/dbname?sslmode=require
 
 # Direct connection — what drizzle-kit and psql use. Neon calls this the unpooled URL.
 DATABASE_URL_UNPOOLED=postgres://user:password@host/dbname?sslmode=require
+
+# The agent server's own database (e.g. a Neon branch), never the live one. It must differ from
+# DATABASE_URL: scripts/prepare-agent-database.ts refuses to run when they match.
+AGENT_DATABASE_URL=postgres://user:password@host/agent_dbname?sslmode=require

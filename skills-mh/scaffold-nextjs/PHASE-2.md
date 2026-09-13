@@ -12,8 +12,8 @@ The container already ran `npm install` on boot, which installed what `create-ne
 These are the ones this scaffold adds:
 
 ```bash
-npm install drizzle-orm postgres server-only
-npm install -D drizzle-kit @electric-sql/pglite vitest prettier prettier-plugin-tailwindcss eslint-config-prettier tsx
+npm install drizzle-orm postgres server-only zod
+npm install -D drizzle-kit @electric-sql/pglite vitest prettier prettier-plugin-tailwindcss eslint-config-prettier tsx playwright-core
 ```
 
 Install **by name only**. npm resolves the current version and writes the range itself, which is
@@ -69,6 +69,12 @@ Fix what phase 1 got wrong. Every one of these must pass:
       the new dependencies existed:
       `supervisorctl -c supervisord.conf restart next-dev`, then curl the port. Check
       `/tmp/next-dev.err.log` if it does not come up.
+- [ ] The headless browser works:
+      `npm run browser -- http://localhost:3000 --screenshot browser-output/check.png` exits 0 and
+      writes the screenshot. Delete `browser-output/` afterwards.
+- [ ] `agent-dev` fails **the intended way**: `supervisorctl -c supervisord.conf start agent-dev`
+      reports a start error, and `/tmp/agent-next-dev.err.log` contains `Not implemented`. Any
+      other error — a guard, a missing module — means the wiring is broken.
 
 ## 5. Finish
 
@@ -86,5 +92,6 @@ failure, and never delete `SCAFFOLD.md` to tidy up.
 ## What this scaffold deliberately omits
 
 Say so if the human asks where they are: no authentication, no `docs/`, no `tests/fixtures/`, no
-backup scripts, and no vendored shadcn components — `npx shadcn@latest add <component>` fetches
+backup scripts, no agent database seeding — `scripts/prepare-agent-database.ts` throws until the
+project implements it — and no vendored shadcn components — `npx shadcn@latest add <component>` fetches
 those on demand.
